@@ -1,8 +1,12 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "modulos")
@@ -11,6 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Modulo {
 
     @Id
@@ -25,7 +30,11 @@ public class Modulo {
     private String descripcion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_curso", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+    @JoinColumn(name = "id_curso")
     private Curso curso;
+
+    @OneToMany(mappedBy = "modulo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JsonManagedReference
+    private Set<Leccion> lecciones = new HashSet<>();
 }
