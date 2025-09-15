@@ -60,3 +60,7 @@ Desarrollar un sistema de gestión de cursos online para DigitalAcademy que perm
 
 ## Cronograma de actividades
 (Hecho en Project)
+
+![39a7a576d68049edb8f1f95407bcf379 1](https://github.com/user-attachments/assets/e80a8476-7e96-42b5-a150-a5797cd47c12)
+
+
