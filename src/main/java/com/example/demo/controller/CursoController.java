@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.CursoDTO;
 import com.example.demo.model.Curso;
 import com.example.demo.service.CursoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,48 +11,30 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cursos")
+@RequiredArgsConstructor
 public class CursoController {
 
     private final CursoService cursoService;
 
-    public CursoController(CursoService cursoService) {
-        this.cursoService = cursoService;
+    @PostMapping
+    public ResponseEntity<CursoDTO> crearCurso(@RequestBody Curso curso) {
+        return ResponseEntity.ok(cursoService.crearCurso(curso));
     }
 
     @GetMapping
-    public List<Curso> listarCursos() {
-        return cursoService.listarTodos();
+    public ResponseEntity<List<CursoDTO>> listarCursos() {
+        return ResponseEntity.ok(cursoService.listarCursos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Curso> obtenerCurso(@PathVariable Long id) {
-        return cursoService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public Curso crearCurso(@RequestBody Curso curso) {
-        return cursoService.guardar(curso);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Curso> actualizarCurso(@PathVariable Long id, @RequestBody Curso curso) {
-        return cursoService.buscarPorId(id)
-                .map(cursoExistente -> {
-                    cursoExistente.setTitulo(curso.getTitulo());
-                    cursoExistente.setDescripcion(curso.getDescripcion());
-                    return ResponseEntity.ok(cursoService.guardar(cursoExistente));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CursoDTO> obtenerCurso(@PathVariable Long id) {
+        return ResponseEntity.ok(cursoService.obtenerCurso(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarCurso(@PathVariable Long id) {
-        if (cursoService.buscarPorId(id).isPresent()) {
-            cursoService.eliminar(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        cursoService.eliminarCurso(id);
+        return ResponseEntity.noContent().build(); // 204 sin body
     }
+
 }

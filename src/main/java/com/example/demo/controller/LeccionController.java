@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.LeccionDTO;
 import com.example.demo.model.Leccion;
 import com.example.demo.service.LeccionService;
 import lombok.RequiredArgsConstructor;
@@ -15,26 +16,14 @@ public class LeccionController {
 
     private final LeccionService leccionService;
 
-    @PostMapping
-    public ResponseEntity<Leccion> crearLeccion(@RequestBody Leccion leccion) {
-        return ResponseEntity.ok(leccionService.crearLeccion(leccion));
+    @PostMapping("/{moduloId}")
+    public ResponseEntity<LeccionDTO> crearLeccion(@PathVariable Long moduloId,
+                                                   @RequestBody Leccion leccion) {
+        return ResponseEntity.ok(leccionService.crearLeccion(moduloId, leccion));
     }
 
-    @GetMapping("/modulo/{idModulo}")
-    public ResponseEntity<List<Leccion>> listarPorModulo(@PathVariable Long idModulo) {
-        return ResponseEntity.ok(leccionService.listarPorModulo(idModulo));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Leccion> actualizarLeccion(
-            @PathVariable Long id,
-            @RequestBody Leccion leccion) {
-        return ResponseEntity.ok(leccionService.actualizarLeccion(id, leccion));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarLeccion(@PathVariable Long id) {
-        leccionService.eliminarLeccion(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/modulo/{moduloId}")
+    public ResponseEntity<List<LeccionDTO>> listarPorModulo(@PathVariable Long moduloId) {
+        return ResponseEntity.ok(leccionService.listarPorModulo(moduloId));
     }
 }

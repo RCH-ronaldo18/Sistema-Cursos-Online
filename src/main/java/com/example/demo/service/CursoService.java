@@ -1,34 +1,43 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.CursoDTO;
+import com.example.demo.mapper.CursoMapper;
 import com.example.demo.model.Curso;
 import com.example.demo.repository.CursoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CursoService {
 
     private final CursoRepository cursoRepository;
 
-    public CursoService(CursoRepository cursoRepository) {
-        this.cursoRepository = cursoRepository;
+    public CursoDTO crearCurso(Curso curso) {
+        return CursoMapper.toDTO(cursoRepository.save(curso));
     }
 
-    public List<Curso> listarTodos() {
-        return cursoRepository.findAll();
+    public List<CursoDTO> listarCursos() {
+        return cursoRepository.findAll()
+                .stream()
+                .map(CursoMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Curso> buscarPorId(Long id) {
-        return cursoRepository.findById(id);
+    public CursoDTO obtenerCurso(Long id) {
+        return cursoRepository.findById(id)
+                .map(CursoMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
     }
 
-    public Curso guardar(Curso curso) {
-        return cursoRepository.save(curso);
-    }
-
-    public void eliminar(Long id) {
+    public void eliminarCurso(Long id) {
+        if (!cursoRepository.existsById(id)) {
+            throw new RuntimeException("Curso no encontrado con id " + id);
+        }
         cursoRepository.deleteById(id);
     }
+
 }

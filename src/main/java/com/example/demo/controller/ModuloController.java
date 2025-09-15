@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ModuloDTO;
 import com.example.demo.model.Modulo;
 import com.example.demo.service.ModuloService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+
 
 import java.util.List;
 
@@ -15,28 +18,24 @@ public class ModuloController {
 
     private final ModuloService moduloService;
 
-    // Crear módulo dentro de un curso
+    // Crear un módulo dentro de un curso
     @PostMapping("/curso/{cursoId}")
-    public ResponseEntity<Modulo> crearModulo(@PathVariable Long cursoId, @RequestBody Modulo modulo) {
-        return ResponseEntity.ok(moduloService.crearModulo(cursoId, modulo));
+    public ResponseEntity<ModuloDTO> crearModulo(
+            @PathVariable Long cursoId,
+            @RequestBody ModuloDTO moduloDTO) {
+        ModuloDTO nuevoModulo = moduloService.crearModuloEnCurso(cursoId, moduloDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoModulo);
     }
 
     // Listar módulos de un curso
     @GetMapping("/curso/{cursoId}")
-    public ResponseEntity<List<Modulo>> listarPorCurso(@PathVariable Long cursoId) {
+    public ResponseEntity<List<ModuloDTO>> listarPorCurso(@PathVariable Long cursoId) {
         return ResponseEntity.ok(moduloService.listarPorCurso(cursoId));
     }
 
-    // Actualizar módulo
-    @PutMapping("/{id}")
-    public ResponseEntity<Modulo> actualizarModulo(@PathVariable Long id, @RequestBody Modulo modulo) {
-        return ResponseEntity.ok(moduloService.actualizarModulo(id, modulo));
-    }
-
-    // Eliminar módulo
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarModulo(@PathVariable Long id) {
-        moduloService.eliminarModulo(id);
-        return ResponseEntity.noContent().build();
+    // Obtener un módulo por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ModuloDTO> obtenerModulo(@PathVariable Long id) {
+        return ResponseEntity.ok(moduloService.obtenerModulo(id));
     }
 }

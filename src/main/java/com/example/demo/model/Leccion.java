@@ -1,11 +1,10 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "lecciones")
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Leccion {
 
     @Id
@@ -25,19 +23,18 @@ public class Leccion {
     @Column(nullable = false, length = 100)
     private String titulo;
 
-    @Column(columnDefinition = "TEXT")
-    private String contenido;
+    @Column(length = 500)
+    private String descripcion;
 
-    @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime fechaCreacion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_modulo")
-    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_modulo", nullable = false)
     private Modulo modulo;
 
-    @PrePersist
-    protected void onCreate() {
-        this.fechaCreacion = LocalDateTime.now();
-    }
+    @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default 
+    private Set<Material> materiales = new HashSet<>();
+
+    @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default   
+    private Set<Evaluacion> evaluaciones = new HashSet<>();
 }

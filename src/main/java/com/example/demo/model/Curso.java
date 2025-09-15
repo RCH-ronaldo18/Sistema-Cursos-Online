@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "cursos")
@@ -28,10 +30,12 @@ public class Curso {
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default   
+    private Set<Modulo> modulos = new HashSet<>();
+
     @PrePersist
     protected void onCreate() {
         this.fechaCreacion = LocalDateTime.now();
     }
 }
-
-

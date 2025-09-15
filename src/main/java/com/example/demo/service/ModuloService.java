@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ModuloDTO;
+import com.example.demo.mapper.ModuloMapper;
 import com.example.demo.model.Curso;
 import com.example.demo.model.Modulo;
 import com.example.demo.repository.CursoRepository;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,33 +19,30 @@ public class ModuloService {
     private final ModuloRepository moduloRepository;
     private final CursoRepository cursoRepository;
 
-    // Crear módulo en un curso
-    public Modulo crearModulo(Long cursoId, Modulo modulo) {
+    public ModuloDTO crearModuloEnCurso(Long cursoId, ModuloDTO dto) {
         Curso curso = cursoRepository.findById(cursoId)
-                .orElseThrow(() -> new RuntimeException("Curso no encontrado con id " + cursoId));
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
+        Modulo modulo = new Modulo();
+        modulo.setTitulo(dto.getTitulo());
+        modulo.setDescripcion(dto.getDescripcion());
         modulo.setCurso(curso);
-        return moduloRepository.save(modulo);
+
+        Modulo guardado = moduloRepository.save(modulo);
+
+        return ModuloMapper.toDTO(guardado); // 👈 usas el mapper estático
     }
 
-    // Listar módulos de un curso
-    public List<Modulo> listarPorCurso(Long cursoId) {
-        return moduloRepository.findByCursoId(cursoId);
+    public List<ModuloDTO> listarPorCurso(Long cursoId) {
+        return moduloRepository.findByCursoId(cursoId).stream()
+                .map(ModuloMapper::toDTO) // 👈 mapper aquí
+                .toList();
     }
 
-    // Actualizar módulo
-    public Modulo actualizarModulo(Long id, Modulo datos) {
+    public ModuloDTO obtenerModulo(Long id) {
         Modulo modulo = moduloRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Módulo no encontrado con id " + id));
-
-        modulo.setTitulo(datos.getTitulo());
-        modulo.setDescripcion(datos.getDescripcion());
-
-        return moduloRepository.save(modulo);
-    }
-
-    // Eliminar módulo
-    public void eliminarModulo(Long id) {
-        moduloRepository.deleteById(id);
+                .orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+        return ModuloMapper.toDTO(modulo); // 👈 mapper aquí también
     }
 }
+
