@@ -7,9 +7,10 @@ public class MaterialMapper {
     public static MaterialDTO toDTO(Material material) {
         return MaterialDTO.builder()
                 .id(material.getId())
-                .tipo(material.getTipo().name()) // pasamos enum -> String
+                .tipo(material.getTipo().name())  // Asumiendo que TipoMaterial es un enum
                 .url(material.getUrl())
-                .leccionTitulo(material.getLeccion().getTitulo())
+                .leccionId(material.getLeccion().getId())  // ID de la lección
+                .leccionTitulo(material.getLeccion().getTitulo())  // Título de la lección
                 .build();
     }
 }

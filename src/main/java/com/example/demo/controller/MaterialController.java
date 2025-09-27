@@ -25,14 +25,13 @@ public class MaterialController {
     }
 
     // POST - crear material en un módulo
-@PostMapping("/leccion/{leccionId}")
-public ResponseEntity<MaterialDTO> crearMaterial(
-        @PathVariable Long leccionId,
-        @RequestBody MaterialDTO dto) {
-    MaterialDTO nuevo = materialService.crearMaterial(leccionId, dto);
-    return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
-}
-
+    @PostMapping("/leccion/{leccionId}")
+    public ResponseEntity<MaterialDTO> crearMaterial(
+            @PathVariable Long leccionId,
+            @RequestBody MaterialDTO dto) {
+        MaterialDTO nuevo = materialService.crearMaterial(leccionId, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
+    }
 
     // PUT - actualizar material
     @PutMapping("/{id}")
