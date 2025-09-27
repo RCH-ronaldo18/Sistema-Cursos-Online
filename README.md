@@ -1,5 +1,5 @@
 ## Título de proyecto
-Sistema de Gestión de Cursos Online para DigitalAcademy
+Sistema de Gestión de Cursos Online para DigitalAcademy (CAMBIAR)
 
 ## Integrantes
 - Chávez Huarcaya, Ronaldo Emiliano  
@@ -45,13 +45,12 @@ Este proyecto ofrece una alternativa accesible frente a las plataformas comercia
 ## Objetivos General y Específicos
 
 ### Objetivo General
-Desarrollar un sistema de gestión de cursos online para DigitalAcademy que permita administrar eficientemente los cursos, materiales educativos y el progreso académico de los estudiantes, asegurando un acceso seguro y flexible.  
+Desarrollar un sistema de gestión de cursos online que permita administrar eficientemente los cursos, materiales educativos y el progreso académico de los estudiantes en la empresa “DigitalAcademy”.
 
 ### Objetivos Específicos
-- Diseñar la estructura de la plataforma con diferentes roles de usuario: Administrador, Editor y Estudiante.  
-- Implementar funcionalidades para la creación de cursos, gestión de módulos y subida de materiales en diversos formatos.  
-- Incorporar un sistema de evaluaciones tipo quiz con retroalimentación automática.  
-- Integrar un mecanismo de autenticación y autorización basado en JWT para garantizar la seguridad de los accesos.
+- Analizar el entorno de trabajo de la empresa “DigitalAcademy”, en cuanto a los cursos y materiales educativos.
+- Desarrollar el sistema que permita administrar eficientemente los flujos del material educativo.
+- Identificar quienes tendrán el acceso para poder integrar los diferentes puntos del sistema.
 
 
 ## Marco teórico
