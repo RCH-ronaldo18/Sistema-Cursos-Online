@@ -33,7 +33,7 @@ public class Evaluacion {
     private String opcionD;
 
     @Column(name = "respuesta_correcta", nullable = false)
-    private char respuestaCorrecta;
+    private String respuestaCorrecta;
 
     @ManyToOne
     @JoinColumn(name = "id_leccion", nullable = false)
