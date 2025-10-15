@@ -50,7 +50,7 @@ Desarrollar un sistema de gestión de cursos online que permita administrar efic
 ### Objetivos Específicos
 - Analizar el entorno de trabajo de la empresa “DigitalAcademy”, en cuanto a los cursos y materiales educativos.
 - Desarrollar el sistema que permita administrar eficientemente los flujos del material educativo.
-- Identificar quienes tendrán el acceso para poder integrar los diferentes puntos del sistema.
+- Identificar quienes tendrán el acceso para poder manejar los diferentes apartados del sistema.
 
 
 ## Marco teórico
@@ -60,6 +60,6 @@ Desarrollar un sistema de gestión de cursos online que permita administrar efic
 ## Cronograma de actividades
 (Hecho en Project)
 
-![39a7a576d68049edb8f1f95407bcf379 1](https://github.com/user-attachments/assets/e80a8476-7e96-42b5-a150-a5797cd47c12)
+![ActualizacionDelDiagramaGannt](<Diagrama Gannt.png>)
 
 
