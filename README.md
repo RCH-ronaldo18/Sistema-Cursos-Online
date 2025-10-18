@@ -1,5 +1,5 @@
 ## Título de proyecto
-Sistema de Gestión de Cursos Online para DigitalAcademy (CAMBIAR)
+Desarrollar un Sistema de Gestión de Cursos Online para DigitalAcademy
 
 ## Integrantes
 - Chávez Huarcaya, Ronaldo Emiliano  
