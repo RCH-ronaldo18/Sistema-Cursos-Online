@@ -4,6 +4,7 @@ import com.example.demo.dto.ProgresoDTO;
 import com.example.demo.service.ProgresoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,22 +17,18 @@ public class ProgresoController {
         this.progresoService = progresoService;
     }
 
-    // Consultar progreso de un estudiante en una lección
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR','ESTUDIANTE')")
     @GetMapping("/usuario/{usuarioId}/leccion/{leccionId}")
-    public ResponseEntity<ProgresoDTO> obtenerProgreso(
-            @PathVariable Long usuarioId, 
-            @PathVariable Long leccionId) {
-        ProgresoDTO progreso = progresoService.obtenerProgreso(usuarioId, leccionId);
-        return ResponseEntity.ok(progreso);
+    public ResponseEntity<ProgresoDTO> obtenerProgreso(@PathVariable Long usuarioId, @PathVariable Long leccionId) {
+        return ResponseEntity.ok(progresoService.obtenerProgreso(usuarioId, leccionId));
     }
 
-    // Crear o Actualizar progreso de un estudiante en una lección
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR','ESTUDIANTE')")
     @PutMapping("/usuario/{usuarioId}/leccion/{leccionId}")
     public ResponseEntity<ProgresoDTO> actualizarProgreso(
-            @PathVariable Long usuarioId, 
-            @PathVariable Long leccionId, 
+            @PathVariable Long usuarioId,
+            @PathVariable Long leccionId,
             @RequestBody ProgresoDTO progresoDTO) {
-        ProgresoDTO progresoActualizado = progresoService.actualizarProgreso(usuarioId, leccionId, progresoDTO);
-        return ResponseEntity.ok(progresoActualizado);
+        return ResponseEntity.ok(progresoService.actualizarProgreso(usuarioId, leccionId, progresoDTO));
     }
 }

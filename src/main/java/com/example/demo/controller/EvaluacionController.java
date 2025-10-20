@@ -4,6 +4,7 @@ import com.example.demo.dto.EvaluacionDTO;
 import com.example.demo.service.EvaluacionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +19,15 @@ public class EvaluacionController {
         this.evaluacionService = evaluacionService;
     }
 
-    // Listar todas las evaluaciones de una lección
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR','ESTUDIANTE')")
     @GetMapping("/leccion/{leccionId}")
     public ResponseEntity<List<EvaluacionDTO>> listarEvaluacionesPorLeccion(@PathVariable Long leccionId) {
         return ResponseEntity.ok(evaluacionService.listarEvaluacionesPorLeccion(leccionId));
     }
 
-    // Crear una nueva evaluación
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR')")
     @PostMapping("/leccion/{leccionId}")
-    public ResponseEntity<EvaluacionDTO> crearEvaluacion(
-            @PathVariable Long leccionId, 
-            @RequestBody EvaluacionDTO evaluacionDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(evaluacionService.crearEvaluacion(leccionId, evaluacionDTO));
+    public ResponseEntity<EvaluacionDTO> crearEvaluacion(@PathVariable Long leccionId, @RequestBody EvaluacionDTO evaluacionDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(evaluacionService.crearEvaluacion(leccionId, evaluacionDTO));
     }
 }

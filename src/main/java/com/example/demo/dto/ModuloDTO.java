@@ -18,6 +18,6 @@ public class ModuloDTO {
     private Long cursoId;
     private String cursoTitulo;
 
-    // Solo las lecciones asociadas
+    // las lecciones asociadas
     private List<LeccionDTO> lecciones;
 }

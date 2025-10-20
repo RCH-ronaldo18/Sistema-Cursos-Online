@@ -1,39 +1,59 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Usuario;
-import com.example.demo.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.security.JwtUtil;
+import com.example.demo.service.UsuarioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class AuthController {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
+    private final JwtUtil jwtUtil;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // Registro de usuario
+    //  Registro de usuario con rol (UsuarioService)
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Usuario usuario) {
-        if (usuarioRepository.existsByNombreUsuario(usuario.getNombreUsuario())) {
-            return ResponseEntity.badRequest().body("⚠️ Usuario ya existe");
-        }
-        Usuario nuevo = usuarioRepository.save(usuario);
-        return ResponseEntity.ok(nuevo);
+    public ResponseEntity<?> registrar(@RequestBody Map<String, String> request) {
+        String nombreUsuario = request.get("nombreUsuario");
+        String password = request.get("password");
+        String rol = request.getOrDefault("rol", "USER");
+
+        Usuario nuevo = usuarioService.registrarUsuario(nombreUsuario, password, rol);
+        return ResponseEntity.ok(Map.of(
+                "mensaje", "Usuario registrado correctamente",
+                "usuario", nuevo.getNombreUsuario()
+        ));
     }
 
-    // Login simple (sin JWT por ahora)
+    //  Login con JWT
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Usuario usuario) {
-        return usuarioRepository.findByNombreUsuario(usuario.getNombreUsuario())
-                .map(u -> {
-                    if (u.getPassword().equals(usuario.getPassword())) {
-                        return ResponseEntity.ok("Login exitoso");
-                    } else {
-                        return ResponseEntity.badRequest().body("Contraseña incorrecta");
-                    }
-                })
-                .orElse(ResponseEntity.badRequest().body("Usuario no encontrado"));
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+        String nombreUsuario = request.get("nombreUsuario");
+        String password = request.get("password");
+
+        Usuario usuario = usuarioService.buscarPorNombre(nombreUsuario);
+
+        // Verifica la contraseña encriptada
+        if (!passwordEncoder.matches(password, usuario.getPassword())) {
+            return ResponseEntity.status(401).body(Map.of("error", "Credenciales inválidas"));
+        }
+
+        // Genera el token JWT
+        String token = jwtUtil.generarToken(nombreUsuario);
+
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "usuario", usuario.getNombreUsuario(),
+                "roles", usuario.getRoles()
+        ));
     }
 }

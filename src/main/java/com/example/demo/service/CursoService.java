@@ -33,6 +33,14 @@ public class CursoService {
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
     }
 
+    public CursoDTO editarCurso(Long id, Curso cursoActualizado) {
+        Curso curso = cursoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+        curso.setTitulo(cursoActualizado.getTitulo());
+        curso.setDescripcion(cursoActualizado.getDescripcion());
+        return CursoMapper.toDTO(cursoRepository.save(curso));
+    }
+
     public void eliminarCurso(Long id) {
         if (!cursoRepository.existsById(id)) {
             throw new RuntimeException("Curso no encontrado con id " + id);
