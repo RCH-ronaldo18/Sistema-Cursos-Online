@@ -1,0 +1,190 @@
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/home"
+                        [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+                        (click)="setActive('home')">
+                        <i class="bi bi-house-fill nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/getUsuario"
+                        [ngClass]="{'nav-link-active': activeLink==='gestion-usuarios', 'nav-link-inactive': activeLink!=='gestion-usuarios'}"
+                        (click)="setActive('gestion-usuarios')">
+                        <i class="bi bi-people-fill nav-icon"></i>
+                        <span>Gestión Usuarios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/getCursos"
+                        [ngClass]="{'nav-link-active': activeLink==='gestion-cursos', 'nav-link-inactive': activeLink!=='gestion-cursos'}"
+                        (click)="setActive('gestion-cursos')">
+                        <i class="bi bi-journal-bookmark-fill nav-icon"></i>
+                        <span>Gestión Cursos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/reportesProgresos"
+                        [ngClass]="{'nav-link-active': activeLink==='reportes', 'nav-link-inactive': activeLink!=='reportes'}"
+                        (click)="setActive('reportes')">
+                        <i class="bi bi-graph-up-arrow nav-icon"></i>
+                        <span>Reportes y Progreso</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+
+        <div class="top-bar">
+            <h1 class="page-title">GESTIÓN USUARIOS</h1>
+            <div class="user-menu-wrapper">
+                <div class="user-menu" (click)="toggleUserMenu()">
+                    <div class="user-avatar">
+                        <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
+                    </div>
+                    <span class="user-info">{{ adminNombreCompleto }}</span>
+                    <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+                </div>
+
+                <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+                    <a class="dropdown-item logout" (click)="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="gestion-container">
+
+            <div class="gestion-form-card">
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido">
+                    </div>
+                    <div class="form-group">
+                        <label for="correo"> Username</label>
+                        <input type="email" id="nombreUsuario">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input [type]="passwordFieldType" id="password" #passwordInput style="padding-right: 3rem;">
+                        <button class="btn-eye-toggle" (click)="togglePasswordVisibility()">
+                            <i class="bi" [class.bi-eye-slash-fill]="!passwordVisible"
+                                [class.bi-eye-fill]="passwordVisible"></i>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="rol">Rol Asignado</label>
+                        <div class="custom-select-wrapper">
+                            <select id="rol">
+                                <option value="" disabled selected>Selecciona un rol</option>
+                                <option value="admin">Administrador</option>
+                                <option value="editor">Editor</option>
+                                <option value="alumno">Alumno</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-filler"></div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-primary-action btn-guardar" (click)="guardarUsuario()">GUARDAR</button>
+                </div>
+            </div>
+            <div class="gestion-search-bar">
+                <input type="text" placeholder="Búsqueda por nombre, rol o correo." class="search-input" (input)="buscarUsuarios($event)">
+                <button class="btn-primary-action btn-search">
+                    <i class="bi bi-search"></i>
+                    Buscar
+                </button>
+            </div>
+
+            <div class="gestion-table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let u of usuarios">
+                            <td>{{u.id}}</td>
+                            <td>{{u.nombre}}</td>
+                            <td>{{u.apellido}}</td>
+                            <td>{{u.nombreUsuario}}</td>
+                            <td>{{ u.roles?.[0]?.nombreRol }}</td>
+                            <td class="action-buttons">
+                                <button class="btn-action btn-edit" (click)="editar(u)">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn-action btn-delete" (click)="eliminar(u.id)">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-overlay" [style.display]="modalOpen ? 'flex' : 'none'">
+    <div class="modal-card">
+        <h3 class="modal-title">{{ modalTitle || 'EDITAR USUARIO' }}</h3>
+        <button class="btn-eye-toggle close-button" (click)="closeModal()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+        <div class="modal-form-grid">
+
+            <div class="form-group">
+                <label for="edit-nombre">Nombre</label>
+                <input type="text" id="edit-nombre" [(ngModel)]="usuarioEditado.nombre">
+            </div>
+            <div class="form-group">
+                <label for="edit-apellido">Apellido</label>
+                <input type="text" id="edit-apellido" [(ngModel)]="usuarioEditado.apellido">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="edit-correo">Username</label>
+                <input type="email" id="edit-nombreUsuario" [(ngModel)]="usuarioEditado.nombreUsuario">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="edit-rol">Rol Asignado</label>
+                <div class="custom-select-wrapper">
+                    <select id="edit-rol" [(ngModel)]="selectedRol"  name="rolAsignado">
+                        <option value="admin">Administrador</option>
+                        <option value="editor">Editor</option>
+                        <option value="alumno" selected>Alumno</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button class="btn-primary-action btn-modal-edit" (click)="guardarEdicion()">EDITAR</button>
+    </div>
+</div>

@@ -1,0 +1,110 @@
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/student/home"
+            [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-house-fill nav-icon"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/student/cursos"
+            [ngClass]="{'nav-link-active': activeLink==='cursos', 'nav-link-inactive': activeLink!=='cursos'}"
+            (click)="setActive('cursos')">
+            <i class="bi bi-journal-check nav-icon"></i>
+            <span>Catalogo Cursos</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/student/cursos-select"
+            [ngClass]="{'nav-link-active': activeLink==='cursos-select', 'nav-link-inactive': activeLink!=='cursos-select'}"
+            (click)="setActive('cursos-select')">
+            <i class="bi bi-journal-check nav-icon"></i>
+            <span>Cursos Inscritos</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <div class="user-menu-wrapper">
+      <div class="user-menu" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          <img src="https://placehold.co/35x35/FF7E00/ffffff?text=A" alt="Avatar">
+        </div>
+        <span class="user-info">Alumno</span>
+        <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+      </div>
+
+      <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+        <a class="dropdown-item logout" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="breadcrumbs">
+      <span class="breadcrumb-item">Cursos</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class="breadcrumb-item active">Nombre del curso</span>
+    </div>
+
+    <div class="course-detail-page">
+      <div class="course-main-content">
+        <h1 class="course-title-detail">Nombre del curso</h1>
+        <div class="course-hero-image" [style.background-image]="'url(' + curso?.imagenUrl + ')'">
+        </div>
+
+
+        <div class="course-meta">
+          <p class="course-creator-info">
+            Por <strong>{{ curso?.editorNombre || 'Profesor no asignado' }}</strong>
+          </p>
+          <p class="course-description">
+            {{ curso?.descripcion }}
+          </p>
+
+          <div class="course-actions">
+            <button class="btn-primary-action" [disabled]="estaInscrito" [ngClass]="{
+    'btn-inscrito': estaInscrito,
+    'btn-normal': !estaInscrito
+  }" (click)="inscribirse()">
+
+              {{ estaInscrito ? "YA ESTÁS INSCRITO" : "INSCRIBIRME" }}
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <aside class="course-sidebar">
+        <h3 class="sidebar-title">Descripción general básica</h3>
+        <div class="module-list" *ngIf="curso?.modulos?.length > 0">
+          <div class="module-item" *ngFor="let m of curso.modulos; index as i">
+            <h4 class="module-title">MÓDULO {{ i + 1 }} — {{ m.titulo }}</h4>
+            <ul class="lesson-list">
+              <li class="lesson-item" *ngFor="let l of m.lecciones; index as j">
+                <span class="lesson-number">L{{ j + 1 }}</span> {{ l.titulo }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="modal-inscrito" [class.visible]="mensajeExito">
+  <div class="modal-content-inscrito">
+    <i class="bi bi-check-circle-fill"></i>
+    <p>¡Inscrito correctamente!</p>
+  </div>
+</div>

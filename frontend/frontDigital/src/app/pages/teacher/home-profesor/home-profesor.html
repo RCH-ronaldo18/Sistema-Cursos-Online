@@ -1,0 +1,148 @@
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+    </div>
+
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/home"
+            [ngClass]="{'nav-link-active': activeLink==='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-speedometer2 nav-icon"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/mis-cursos"
+            [ngClass]="{'nav-link-active': activeLink==='courses'}"
+            (click)="setActive('courses')">
+            <i class="bi bi-journal-richtext nav-icon"></i>
+            <span>Mis Cursos</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/progreso"
+            [ngClass]="{'nav-link-active': activeLink==='students'}"
+            (click)="setActive('students')">
+            <i class="bi bi-people-fill nav-icon"></i>
+            <span>Progreso Estudiantes</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+
+    <!-- USER MENU -->
+    <div class="user-menu-wrapper">
+      <div class="user-menu" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          <img src="https://placehold.co/35x35/FF7E00/ffffff?text=P" alt="Avatar">
+        </div>
+        <span class="user-info">Profesor</span>
+        <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+      </div>
+
+      <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+        <a class="dropdown-item logout" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- WELCOME CARD -->
+    <div class="welcome-card-container">
+      <div class="welcome-text-area">
+        <h1>Hola Profesor, ¡Bienvenido!</h1>
+        <p>Es un gusto verte de nuevo. Aquí tienes un resumen de tu actividad docente.</p>
+
+        <div class="welcome-message-box">
+          <h2>Crea, guía y</h2>
+          <h2>transforma estudiantes</h2>
+          <small>Administra tus cursos, revisa progreso y mejora continuamente.</small>
+        </div>
+      </div>
+
+      <!-- Progress Cards -->
+      <div class="progress-cards-container">
+
+        <div class="progress-desktop-card">
+          <div class="progress-icon-bg completed">
+            <i class="bi bi-book"></i>
+          </div>
+          <div class="progress-info">
+            <strong>12</strong>
+            <p>Cursos Creados</p>
+          </div>
+          <div class="progress-bar-area">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 85%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-desktop-card">
+          <div class="progress-icon-bg in-progress">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div class="progress-info">
+            <strong>320</strong>
+            <p>Total Estudiantes</p>
+          </div>
+          <div class="progress-bar-area">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 70%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-desktop-card">
+          <div class="progress-icon-bg achievements">
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <div class="progress-info">
+            <strong>4.8</strong>
+            <p>Rating Promedio</p>
+          </div>
+          <div class="progress-bar-area">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 96%;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CURSOS DEL PROFESOR -->
+    <div class="content-layout">
+      <section class="popular-courses">
+        <div class="section-header">
+          <h2>Mis Cursos</h2>
+          <button class="btn-base btn-ver-todos" routerLink="/teacher/mis-cursos">Ver Todos</button>
+        </div>
+
+        <div class="course-grid">
+          <div class="course-card" *ngFor="let course of teacherCourses">
+            <div class="course-image" [style.backgroundImage]="'url('+course.img+')'"></div>
+
+            <div class="course-info">
+              <p class="course-title">{{course.title}}</p>
+              <p class="course-subtitle">Última actualización: {{course.updated}}</p>
+              <p class="course-students">{{course.students}} estudiantes activos</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>

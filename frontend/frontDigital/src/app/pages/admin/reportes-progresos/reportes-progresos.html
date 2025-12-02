@@ -1,0 +1,201 @@
+<div class="dashboard-layout">
+
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="assets/LogoDigital.png" alt="Digital Academy Logo" class="logo-img">
+    </div>
+
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/home"
+            [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-house-fill nav-icon"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/getUsuario"
+            [ngClass]="{'nav-link-active': activeLink==='gestion-usuarios', 'nav-link-inactive': activeLink!=='gestion-usuarios'}"
+            (click)="setActive('gestion-usuarios')">
+            <i class="bi bi-people-fill nav-icon"></i>
+            <span>Gestión Usuarios</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/getCursos"
+            [ngClass]="{'nav-link-active': activeLink==='gestion-cursos', 'nav-link-inactive': activeLink!=='gestion-cursos'}"
+            (click)="setActive('gestion-cursos')">
+            <i class="bi bi-journal-bookmark-fill nav-icon"></i>
+            <span>Gestión Cursos</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/reportesProgresos"
+            [ngClass]="{'nav-link-active': activeLink==='reportes', 'nav-link-inactive': activeLink!=='reportes'}"
+            (click)="setActive('reportes')">
+            <i class="bi bi-graph-up-arrow nav-icon"></i>
+            <span>Reportes y Progreso</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main-wrapper">
+    <div class="top-bar">
+      <h1 class="page-title">
+        REPORTES - ADMINISTRADOR
+      </h1>
+
+      <div class="user-menu-wrapper">
+        <div class="user-menu" (click)="toggleUserMenu()">
+          <div class="user-avatar">
+            <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
+          </div>
+          <span class="user-info">{{ adminNombreCompleto }}</span>
+          <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+        </div>
+        <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+          <div class="dropdown-item logout" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO DE REPORTES DINÁMICOS -->
+    <div class="reports-dynamic-container">
+
+      <!-- GRÁFICO 1: PROGRESO PROMEDIO POR CURSO -->
+      <div class="report-card">
+        <div class="report-header">
+          <h3 class="report-title">Progreso Promedio por Curso</h3>
+          <div class="report-filters">
+            <label>Filtrar:</label>
+            <select [(ngModel)]="cursoSeleccionado">
+              <option [value]="null">Todos los cursos</option>
+              <option *ngFor="let curso of cursos" [value]="curso.id_curso">
+                {{ curso.titulo }}
+              </option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="chartProgreso"></canvas>
+        </div>
+        
+        <div class="chart-data" *ngIf="progresoPromedioData.length > 0">
+          <h4>Datos Detallados:</h4>
+          <div class="data-grid">
+            <div class="data-item" *ngFor="let item of progresoPromedioData">
+              <span class="data-label">{{ item.cursoNombre }}</span>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" [style.width.%]="item.progresoPromedio"></div>
+              </div>
+              <span class="data-value">{{ item.progresoPromedio }}%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="no-data" *ngIf="progresoPromedioData.length === 0">
+          <i class="bi bi-graph-up"></i>
+          <p>No hay datos de progreso disponibles</p>
+        </div>
+      </div>
+
+      <!-- GRÁFICO 2: CALIFICACIONES PROMEDIO -->
+      <div class="report-card">
+        <div class="report-header">
+          <h3 class="report-title">Calificaciones Promedio por Curso</h3>
+          <div class="report-filters">
+            <label>Filtrar:</label>
+            <select [(ngModel)]="cursoSeleccionadoCalificaciones">
+              <option [value]="null">Todos los cursos</option>
+              <option *ngFor="let curso of cursos" [value]="curso.id_curso">
+                {{ curso.titulo }}
+              </option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="chartCalificaciones"></canvas>
+        </div>
+        
+        <div class="chart-data" *ngIf="calificacionesPromedioData.length > 0">
+          <h4>Resumen de Calificaciones:</h4>
+          <div class="data-grid">
+            <div class="data-item" *ngFor="let item of calificacionesPromedioData">
+              <span class="data-label">{{ item.cursoNombre }}</span>
+              <div class="rating-stars">
+                <span class="star" [class.filled]="item.calificacionPromedio >= 2">★</span>
+                <span class="star" [class.filled]="item.calificacionPromedio >= 4">★</span>
+                <span class="star" [class.filled]="item.calificacionPromedio >= 6">★</span>
+                <span class="star" [class.filled]="item.calificacionPromedio >= 8">★</span>
+                <span class="star" [class.filled]="item.calificacionPromedio >= 10">★</span>
+              </div>
+              <span class="data-value">{{ item.calificacionPromedio }}/10</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="no-data" *ngIf="calificacionesPromedioData.length === 0">
+          <i class="bi bi-star"></i>
+          <p>No hay datos de calificaciones disponibles</p>
+        </div>
+      </div>
+
+      <!-- GRÁFICO 3: PROGRESO DE ESTUDIANTES -->
+      <div class="report-card">
+        <div class="report-header">
+          <h3 class="report-title">Progreso de Estudiantes por Curso</h3>
+          <div class="report-filters">
+            <label>Curso:</label>
+            <select [(ngModel)]="cursoSeleccionadoEstudiantes" (change)="onFiltroEstudiantesChange()">
+              <option [value]="null">Selecciona un curso</option>
+              <option *ngFor="let curso of cursos" [value]="curso.id_curso">
+                {{ curso.titulo }}
+              </option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="chartProgresoEstudiantes"></canvas>
+        </div>
+        
+        <div class="chart-data" *ngIf="progresoEstudiantesData.length > 0">
+          <h4>Progreso Individual:</h4>
+          <div class="students-grid">
+            <div class="student-item" *ngFor="let item of progresoEstudiantesData">
+              <div class="student-avatar">
+                {{ item.estudianteNombre?.charAt(0) || 'E' }}
+              </div>
+              <div class="student-info">
+                <span class="student-name">{{ item.estudianteNombre || 'Estudiante' }}</span>
+                <div class="progress-bar-bg small">
+                  <div class="progress-bar-fill" [style.width.%]="item.progreso"></div>
+                </div>
+              </div>
+              <span class="student-progress">{{ item.progreso }}%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="no-data" *ngIf="progresoEstudiantesData.length === 0">
+          <i class="bi bi-people"></i>
+          <p>Selecciona un curso para ver el progreso de estudiantes</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<div class="modal-overlay" [style.display]="modalOpen ? 'flex' : 'none'">
+  <!-- Modal content si es necesario -->
+</div>

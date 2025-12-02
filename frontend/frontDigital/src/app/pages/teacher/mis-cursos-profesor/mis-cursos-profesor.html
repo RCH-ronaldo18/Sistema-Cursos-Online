@@ -1,0 +1,80 @@
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+    </div>
+
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/home" [ngClass]="{'nav-link-active': activeLink==='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-speedometer2 nav-icon"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/mis-cursos" [ngClass]="{'nav-link-active': activeLink==='courses'}"
+            (click)="setActive('courses')">
+            <i class="bi bi-journal-richtext nav-icon"></i>
+            <span>Mis Cursos</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/progreso" [ngClass]="{'nav-link-active': activeLink==='students'}"
+            (click)="setActive('students')">
+            <i class="bi bi-people-fill nav-icon"></i>
+            <span>Progreso Estudiantes</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+
+    <!-- USER MENU -->
+    <div class="user-menu-wrapper">
+      <div class="user-menu" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          <img src="https://placehold.co/35x35/FF7E00/ffffff?text=P" alt="Avatar">
+        </div>
+        <span class="user-info">Profesor</span>
+        <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+      </div>
+
+      <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+        <a class="dropdown-item logout" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- TITULO -->
+    <h2 class="page-title">Mis Cursos</h2>
+
+    <!-- GRID DE CURSOS -->
+    <div class="course-grid">
+      <div class="course-card" *ngFor="let course of teacherCourses">
+        <div class="course-image"  [style.backgroundImage]="'url(' + course.imagenUrl + ')'">
+        </div>
+
+        <div class="course-info">
+          <h3 class="course-title">{{ course.titulo }}</h3>
+          <p class="course-subtitle">Estudiantes: {{ course.students || 0 }}</p>
+
+          <button class="btn-base btn-create" (click)="goToBuilder(course.id)">
+            Agregar elementos
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
